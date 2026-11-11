@@ -209,8 +209,18 @@ def jbrowse_config():
     }
 
 
+# Genomic/data files must NOT use /assets — Vite emits JS/CSS to /assets/*
 if ASSETS_DIR.exists():
-    app.mount("/assets", StaticFiles(directory=str(ASSETS_DIR)), name="assets")
+    app.mount("/data-files", StaticFiles(directory=str(ASSETS_DIR)), name="data_files")
+
+# Serve Vite build assets explicitly
+_frontend_assets = STATIC_DIR / "assets"
+if _frontend_assets.exists():
+    app.mount(
+        "/assets",
+        StaticFiles(directory=str(_frontend_assets)),
+        name="frontend_assets",
+    )
 
 
 @app.get("/")
@@ -223,7 +233,7 @@ def root_index():
 
 @app.get("/{full_path:path}")
 def spa_fallback(full_path: str):
-    if full_path.startswith("api/") or full_path.startswith("assets/"):
+    if full_path.startswith("api/") or full_path.startswith("data-files/"):
         raise HTTPException(404, "Not found")
     candidate = STATIC_DIR / full_path
     if candidate.exists() and candidate.is_file():

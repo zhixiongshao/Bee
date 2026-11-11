@@ -514,8 +514,8 @@ class DataStore:
                 "trackId": f"{assembly_name}-ReferenceSequenceTrack",
                 "adapter": {
                     "type": "IndexedFastaAdapter",
-                    "fastaLocation": {"uri": "/assets/genome.fa"},
-                    "faiLocation": {"uri": "/assets/genome.fa.fai"},
+                    "fastaLocation": {"uri": "/data-files/genome.fa"},
+                    "faiLocation": {"uri": "/data-files/genome.fa.fai"},
                 },
             }
         else:
@@ -525,7 +525,7 @@ class DataStore:
                 "adapter": {
                     "type": "ChromSizesAdapter",
                     "chromSizesLocation": {
-                        "uri": "/assets/amel_HAv3.1.chrom.sizes"
+                        "uri": "/data-files/amel_HAv3.1.chrom.sizes"
                     },
                 },
             }
@@ -541,11 +541,11 @@ class DataStore:
                 if key in adapter and isinstance(adapter[key], dict):
                     uri = adapter[key].get("uri", "")
                     name = Path(uri).name
-                    adapter[key]["uri"] = f"/assets/{name}"
+                    adapter[key]["uri"] = f"/data-files/{name}"
             if "index" in adapter and isinstance(adapter["index"], dict):
                 loc = adapter["index"].get("location", {})
                 if "uri" in loc:
-                    loc["uri"] = f"/assets/{Path(loc['uri']).name}"
+                    loc["uri"] = f"/data-files/{Path(loc['uri']).name}"
             track["assemblyNames"] = [assembly_name]
             tracks.append(track)
         cfg["tracks"] = tracks

@@ -54,11 +54,9 @@ git push -u origin main
 
 ### 关于大文件
 
-- `data-large/variants_index.db`（约 543MB）**默认不进 Git**（超过 GitHub 100MB 限制）
-- 默认部署用 `data/variants_summary_top.tsv` 做 Variation 回退，站点可正常上线
-- 若需要完整 4.7M SNP 区间查询：
-  1. 本地执行 `bash scripts/enable_full_variants.sh`
-  2. 用 Git LFS 管理该文件，或放到对象存储后在构建时下载
+- 完整变异库：`data/variants_index.db`（约 543MB，**Git LFS**）
+- 克隆仓库前请安装并启用 LFS：`git lfs install && git lfs pull`
+- Render Docker 部署会检出 LFS 文件；若构建报 pointer 过小，检查该服务是否开启 Git LFS
 
 ## Render 部署
 

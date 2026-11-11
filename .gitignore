@@ -18,7 +18,6 @@ venv/
 
 # oversized SQLite (GitHub 100MB limit). Keep locally in data-large/
 data-large/
-data/variants_index.db
 
 # logs
 *.log

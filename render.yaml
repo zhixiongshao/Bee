@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: amel-wgs-atlas
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: ASSETS_DIR
+        value: /app/data
+      - key: STATIC_DIR
+        value: /app/frontend/dist

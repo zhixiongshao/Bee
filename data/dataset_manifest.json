@@ -1,0 +1,62 @@
+[
+  {
+    "file_name": "pca_with_qc_2360.tsv",
+    "size_bytes": 426320,
+    "size_human": "416.3 KB",
+    "md5": "80bb004af30d640ba5d698ea62307eb7"
+  },
+  {
+    "file_name": "popgen_metrics_summary_2360.json",
+    "size_bytes": 1568,
+    "size_human": "1.5 KB",
+    "md5": "5152e87aace0d13f23b4c711bc275406"
+  },
+  {
+    "file_name": "cohort_2360_fst_summary.tsv",
+    "size_bytes": 280,
+    "size_human": "0.3 KB",
+    "md5": "fe0a3354ae0b38cf515745c4a774c75f"
+  },
+  {
+    "file_name": "cohort_2360_pi_summary.tsv",
+    "size_bytes": 223,
+    "size_human": "0.2 KB",
+    "md5": "934d7a937bf1ac0b49581ff7af339f50"
+  },
+  {
+    "file_name": "admixture_cohort_2360.json",
+    "size_bytes": 1175276,
+    "size_human": "1.12 MB",
+    "md5": "f5e8516c5403e8fe06c4cb91d888e965"
+  },
+  {
+    "file_name": "cohort_2360_ld_decay.json",
+    "size_bytes": 32048,
+    "size_human": "31.3 KB",
+    "md5": "824879dc5469b8a0671598c3bff8b6c0"
+  },
+  {
+    "file_name": "cohort_2360_nj.tree",
+    "size_bytes": 70257,
+    "size_human": "68.6 KB",
+    "md5": "e0693362adef84d2e2a2bcc46bed954b"
+  },
+  {
+    "file_name": "selective_sweeps_top5pct.tsv",
+    "size_bytes": 484244,
+    "size_human": "472.9 KB",
+    "md5": "20b67eb3ad14506b6e8e5239c3180254"
+  },
+  {
+    "file_name": "gene_cards_summary.tsv",
+    "size_bytes": 3036891,
+    "size_human": "2.90 MB",
+    "md5": "36c3d8b7306289e4a82a6ee0ca876f88"
+  },
+  {
+    "file_name": "variants_summary_top.tsv",
+    "size_bytes": 566272,
+    "size_human": "553.0 KB",
+    "md5": "54a2d48368e4d196e50668802fe2b192"
+  }
+]

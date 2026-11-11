@@ -1,0 +1,85 @@
+{
+  "assembly": {
+    "name": "Amel_HAv3.1",
+    "sequence": {
+      "type": "ReferenceSequenceTrack",
+      "trackId": "Amel_HAv3.1-ReferenceSequenceTrack",
+      "adapter": {
+        "type": "IndexedFastaAdapter",
+        "fastaLocation": {
+          "uri": "/tracks/genome.fa"
+        },
+        "faiLocation": {
+          "uri": "/tracks/genome.fa.fai"
+        }
+      }
+    }
+  },
+  "tracks": [
+    {
+      "type": "FeatureTrack",
+      "trackId": "amel_genes",
+      "name": "Genes (Amel_HAv3.1)",
+      "category": [
+        "Annotation"
+      ],
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "/tracks/genes.sorted.gtf.gz"
+        },
+        "index": {
+          "location": {
+            "uri": "/tracks/genes.sorted.gtf.gz.tbi"
+          }
+        }
+      }
+    },
+    {
+      "type": "VariantTrack",
+      "trackId": "cohort_2360_variants",
+      "name": "Cohort 2360 Clean Variants",
+      "category": [
+        "Genomics"
+      ],
+      "adapter": {
+        "type": "VcfTabixAdapter",
+        "vcfGzLocation": {
+          "uri": "/tracks/cohort_2360_clean.vcf.gz"
+        },
+        "index": {
+          "location": {
+            "uri": "/tracks/cohort_2360_clean.vcf.gz.tbi"
+          }
+        }
+      }
+    }
+  ],
+  "defaultSession": {
+    "name": "Default",
+    "view": {
+      "id": "linearGenomeView",
+      "type": "LinearGenomeView",
+      "offsetPx": 0,
+      "bpPerPx": 1,
+      "displayedRegions": [
+        {
+          "refName": "NC_037638.1",
+          "start": 0,
+          "end": 100000,
+          "assemblyName": "Amel_HAv3.1"
+        }
+      ],
+      "tracks": [
+        {
+          "type": "FeatureTrack",
+          "configuration": "amel_genes"
+        },
+        {
+          "type": "VariantTrack",
+          "configuration": "cohort_2360_variants"
+        }
+      ]
+    }
+  }
+}

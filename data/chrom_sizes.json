@@ -1,0 +1,887 @@
+[
+  {
+    "chrom": "NC_037638.1",
+    "length": 27754200,
+    "is_main_chrom": true
+  },
+  {
+    "chrom": "NC_037639.1",
+    "length": 16089512,
+    "is_main_chrom": true
+  },
+  {
+    "chrom": "NW_020555788.1",
+    "length": 3988,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NC_037640.1",
+    "length": 13619445,
+    "is_main_chrom": true
+  },
+  {
+    "chrom": "NC_037641.1",
+    "length": 13404451,
+    "is_main_chrom": true
+  },
+  {
+    "chrom": "NC_037642.1",
+    "length": 13896941,
+    "is_main_chrom": true
+  },
+  {
+    "chrom": "NW_020555789.1",
+    "length": 24043,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NC_037643.1",
+    "length": 17789102,
+    "is_main_chrom": true
+  },
+  {
+    "chrom": "NW_020555790.1",
+    "length": 23881,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NC_037644.1",
+    "length": 14198698,
+    "is_main_chrom": true
+  },
+  {
+    "chrom": "NW_020555791.1",
+    "length": 28854,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555792.1",
+    "length": 22163,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555793.1",
+    "length": 12667,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NC_037645.1",
+    "length": 12717210,
+    "is_main_chrom": true
+  },
+  {
+    "chrom": "NW_020555794.1",
+    "length": 40528,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555795.1",
+    "length": 17189,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555796.1",
+    "length": 11842,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NC_037646.1",
+    "length": 12354651,
+    "is_main_chrom": true
+  },
+  {
+    "chrom": "NW_020555797.1",
+    "length": 41529,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555798.1",
+    "length": 41327,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555799.1",
+    "length": 36874,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555800.1",
+    "length": 34862,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555801.1",
+    "length": 31353,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555802.1",
+    "length": 26859,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555803.1",
+    "length": 25295,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555804.1",
+    "length": 21070,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555805.1",
+    "length": 18505,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555806.1",
+    "length": 17223,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555807.1",
+    "length": 17199,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555808.1",
+    "length": 15069,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555809.1",
+    "length": 14774,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555810.1",
+    "length": 11259,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555811.1",
+    "length": 11145,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555812.1",
+    "length": 6719,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555813.1",
+    "length": 4248,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NC_037647.1",
+    "length": 12360052,
+    "is_main_chrom": true
+  },
+  {
+    "chrom": "NW_020555814.1",
+    "length": 95318,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555815.1",
+    "length": 67913,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555816.1",
+    "length": 40431,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555817.1",
+    "length": 28022,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555818.1",
+    "length": 23055,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555819.1",
+    "length": 22320,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555820.1",
+    "length": 20023,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NC_037648.1",
+    "length": 16352600,
+    "is_main_chrom": true
+  },
+  {
+    "chrom": "NW_020555821.1",
+    "length": 35182,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555822.1",
+    "length": 24609,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555823.1",
+    "length": 15613,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555824.1",
+    "length": 13259,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555825.1",
+    "length": 3624,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NC_037649.1",
+    "length": 11514234,
+    "is_main_chrom": true
+  },
+  {
+    "chrom": "NW_020555826.1",
+    "length": 18903,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NC_037650.1",
+    "length": 11279722,
+    "is_main_chrom": true
+  },
+  {
+    "chrom": "NC_037651.1",
+    "length": 10670842,
+    "is_main_chrom": true
+  },
+  {
+    "chrom": "NW_020555827.1",
+    "length": 35146,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555828.1",
+    "length": 24061,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555829.1",
+    "length": 23155,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555830.1",
+    "length": 21574,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555831.1",
+    "length": 19344,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555832.1",
+    "length": 16896,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555833.1",
+    "length": 16072,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555834.1",
+    "length": 14199,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555835.1",
+    "length": 13856,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555836.1",
+    "length": 12635,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555837.1",
+    "length": 12630,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555838.1",
+    "length": 11160,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555839.1",
+    "length": 9716,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555840.1",
+    "length": 8753,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NC_037652.1",
+    "length": 9534514,
+    "is_main_chrom": true
+  },
+  {
+    "chrom": "NW_020555841.1",
+    "length": 73645,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555842.1",
+    "length": 60267,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555843.1",
+    "length": 44578,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555844.1",
+    "length": 35241,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555845.1",
+    "length": 24031,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555846.1",
+    "length": 23749,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555847.1",
+    "length": 21570,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555848.1",
+    "length": 21229,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555849.1",
+    "length": 20706,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555850.1",
+    "length": 18311,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555851.1",
+    "length": 10530,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555852.1",
+    "length": 9153,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555853.1",
+    "length": 5948,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555854.1",
+    "length": 5288,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555855.1",
+    "length": 4502,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555856.1",
+    "length": 3152,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555857.1",
+    "length": 3072,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555858.1",
+    "length": 2987,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NC_037653.1",
+    "length": 7238532,
+    "is_main_chrom": true
+  },
+  {
+    "chrom": "NW_020555859.1",
+    "length": 486754,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555860.1",
+    "length": 311923,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555861.1",
+    "length": 135562,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555862.1",
+    "length": 120686,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555863.1",
+    "length": 108711,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555864.1",
+    "length": 92711,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555865.1",
+    "length": 68035,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555866.1",
+    "length": 66194,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555867.1",
+    "length": 56971,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555868.1",
+    "length": 56225,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555869.1",
+    "length": 52709,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555870.1",
+    "length": 52744,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555871.1",
+    "length": 49670,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555872.1",
+    "length": 49506,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555873.1",
+    "length": 36396,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555874.1",
+    "length": 35193,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555875.1",
+    "length": 35070,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555876.1",
+    "length": 34588,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555877.1",
+    "length": 33219,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555878.1",
+    "length": 30850,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555879.1",
+    "length": 30345,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555880.1",
+    "length": 30149,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555881.1",
+    "length": 29749,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555882.1",
+    "length": 29493,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555883.1",
+    "length": 28697,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555884.1",
+    "length": 25587,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555885.1",
+    "length": 25299,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555886.1",
+    "length": 25083,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555887.1",
+    "length": 24917,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555888.1",
+    "length": 24436,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555889.1",
+    "length": 22456,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555890.1",
+    "length": 22137,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555891.1",
+    "length": 21830,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555892.1",
+    "length": 21705,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555893.1",
+    "length": 21390,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555894.1",
+    "length": 21197,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555895.1",
+    "length": 20251,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555896.1",
+    "length": 19254,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555897.1",
+    "length": 18419,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555898.1",
+    "length": 18185,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555899.1",
+    "length": 18108,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555900.1",
+    "length": 16039,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555901.1",
+    "length": 15874,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555902.1",
+    "length": 15501,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555903.1",
+    "length": 15245,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555904.1",
+    "length": 14627,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555905.1",
+    "length": 14470,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555906.1",
+    "length": 14429,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555907.1",
+    "length": 13874,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555908.1",
+    "length": 13557,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555909.1",
+    "length": 13184,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555910.1",
+    "length": 12682,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555911.1",
+    "length": 12676,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555912.1",
+    "length": 12477,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555913.1",
+    "length": 12356,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555914.1",
+    "length": 12212,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555915.1",
+    "length": 12075,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555916.1",
+    "length": 11738,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555917.1",
+    "length": 11215,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555918.1",
+    "length": 10554,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555919.1",
+    "length": 9876,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555920.1",
+    "length": 9803,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555921.1",
+    "length": 9724,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555922.1",
+    "length": 9462,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555923.1",
+    "length": 9171,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555924.1",
+    "length": 9093,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555925.1",
+    "length": 8299,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555926.1",
+    "length": 8261,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555927.1",
+    "length": 8085,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555928.1",
+    "length": 8075,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555929.1",
+    "length": 7938,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555930.1",
+    "length": 7794,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555931.1",
+    "length": 7505,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555932.1",
+    "length": 7322,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555933.1",
+    "length": 7158,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555934.1",
+    "length": 7118,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555935.1",
+    "length": 7093,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555936.1",
+    "length": 6759,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555937.1",
+    "length": 6019,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555938.1",
+    "length": 5439,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555939.1",
+    "length": 5147,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555940.1",
+    "length": 5036,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555941.1",
+    "length": 5006,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555942.1",
+    "length": 4954,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555943.1",
+    "length": 4407,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555944.1",
+    "length": 3840,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555945.1",
+    "length": 3691,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555946.1",
+    "length": 2376,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NW_020555947.1",
+    "length": 2302,
+    "is_main_chrom": false
+  },
+  {
+    "chrom": "NC_001566.1",
+    "length": 16343,
+    "is_main_chrom": true
+  }
+]

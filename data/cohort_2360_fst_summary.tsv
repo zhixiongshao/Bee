@@ -1,0 +1,11 @@
+pair	pop1	pop2	weighted_fst	windows_count
+A_vs_C	A	C	0.3165	22033
+A_vs_M	A	M	0.2003	22033
+A_vs_O	A	O	0.218	22033
+A_vs_Y	A	Y	0.1651	22033
+C_vs_M	C	M	0.2697	22033
+C_vs_O	C	O	0.4064	22033
+C_vs_Y	C	Y	0.522	22033
+M_vs_O	M	O	0.3325	22033
+M_vs_Y	M	Y	0.3577	22033
+O_vs_Y	O	Y	0.3933	21981

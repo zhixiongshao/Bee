@@ -1,0 +1,25 @@
+# dependencies / build
+frontend/node_modules/
+frontend/dist/
+**/__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
+
+# env
+.env
+.env.*
+
+# oversized SQLite (GitHub 100MB limit). Keep locally in data-large/
+data-large/
+data/variants_index.db
+
+# logs
+*.log
+npm-debug.log*

@@ -1,0 +1,11 @@
+可选完整变异库说明
+================
+
+文件位置（本机已复制）：
+  data-large/variants_index.db  (~543MB)
+
+该文件超过 GitHub 100MB 限制，默认不会提交。
+
+- 普通 GitHub + Render 部署：不需要它，Variation 会自动用 data/variants_summary_top.tsv
+- 本地启用完整库：bash scripts/enable_full_variants.sh
+- 若要用 Git LFS 上传完整库，请自行配置后再提交 data/variants_index.db

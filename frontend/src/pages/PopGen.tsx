@@ -136,22 +136,46 @@ export default function PopGen() {
     })
     return {
       tooltip: { position: 'top' },
-      grid: { left: 50, right: 40, top: 20, bottom: 40 },
-      xAxis: { type: 'category', data: labels },
-      yAxis: { type: 'category', data: labels },
+      grid: { left: 50, right: 72, top: 24, bottom: 48 },
+      xAxis: {
+        type: 'category',
+        data: labels,
+        name: 'Lineage',
+        nameLocation: 'middle',
+        nameGap: 28,
+        axisLabel: { color: '#13211f' },
+      },
+      yAxis: {
+        type: 'category',
+        data: labels,
+        name: 'Lineage',
+        nameLocation: 'middle',
+        nameGap: 36,
+        axisLabel: { color: '#13211f' },
+      },
       visualMap: {
         min: 0,
-        max: Math.max(0.1, ...data.map((d) => d[2] || 0)),
+        max: 0.7,
         calculable: true,
         orient: 'vertical',
-        right: 0,
-        inRange: { color: ['#f7f3ea', '#d4a017', '#0f3d38'] },
+        right: 8,
+        top: 'middle',
+        text: ['0.7', '0'],
+        textStyle: { color: '#13211f' },
+        inRange: {
+          color: ['#f7fbff', '#c6dbef', '#6baed6', '#2171b5', '#08306b'],
+        },
       },
       series: [
         {
           type: 'heatmap',
           data,
-          label: { show: true, formatter: (p: any) => Number(p.data[2]).toFixed(2) },
+          label: {
+            show: true,
+            color: '#13211f',
+            formatter: (p: any) => Number(p.data[2]).toFixed(2),
+          },
+          itemStyle: { borderColor: '#fff', borderWidth: 1 },
         },
       ],
     }
@@ -160,22 +184,68 @@ export default function PopGen() {
   const piOption = useMemo(() => {
     const pi = summary.data?.nucleotide_diversity_pi || {}
     const labels = Object.keys(pi)
+    const colors: Record<string, string> = {
+      A: '#E4572E',
+      C: '#2E86AB',
+      M: '#F2C14E',
+      O: '#76B041',
+      Y: '#8E44AD',
+    }
+    const boxes = labels.map((l) => {
+      const d = pi[l]
+      const median = d.median ?? d.median_pi
+      const q25 = d.q25
+      const q75 = d.q75
+      const iqr = q75 - q25
+      const low = d.min ?? Math.max(0, q25 - 1.5 * iqr)
+      const high = d.max ?? q75 + 1.5 * iqr
+      return {
+        value: [low, q25, median, q75, high],
+        itemStyle: {
+          color: colors[l] || '#a8d5c8',
+          borderColor: '#13211f',
+          borderWidth: 1.2,
+        },
+      }
+    })
+    const means = labels
+      .map((l, idx) => (pi[l]?.mean != null ? [idx, pi[l].mean] : null))
+      .filter(Boolean)
     return {
-      tooltip: { trigger: 'item' },
-      grid: { left: 50, right: 20, top: 30, bottom: 40 },
-      xAxis: { type: 'category', data: labels, name: 'Lineage' },
+      tooltip: {
+        trigger: 'item',
+        formatter: (p: any) => {
+          if (p.seriesType === 'scatter') {
+            return `${labels[p.data[0]]}<br/>mean π = ${Number(p.data[1]).toFixed(6)}`
+          }
+          const l = labels[p.dataIndex]
+          const d = pi[l] || {}
+          return `${l}<br/>median=${d.median ?? d.median_pi}<br/>q25=${d.q25}<br/>q75=${d.q75}<br/>mean=${d.mean}`
+        },
+      },
+      grid: { left: 55, right: 20, top: 30, bottom: 48 },
+      xAxis: {
+        type: 'category',
+        data: labels,
+        name: 'Lineage',
+        nameLocation: 'middle',
+        nameGap: 28,
+      },
       yAxis: { type: 'value', name: 'π' },
       series: [
         {
+          name: 'π',
           type: 'boxplot',
-          data: labels.map((l) => {
-            const d = pi[l]
-            const median = d.median ?? d.median_pi
-            const low = d.min ?? d.q25
-            const high = d.max ?? d.q75
-            return [low, d.q25, median, d.q75, high]
-          }),
-          itemStyle: { color: '#a8d5c8', borderColor: '#0f3d38' },
+          data: boxes,
+        },
+        {
+          name: 'mean',
+          type: 'scatter',
+          data: means,
+          symbol: 'diamond',
+          symbolSize: 10,
+          itemStyle: { color: '#13211f' },
+          z: 5,
         },
       ],
     }
@@ -186,15 +256,24 @@ export default function PopGen() {
     return {
       tooltip: { trigger: 'axis' },
       legend: { top: 0 },
-      grid: { left: 50, right: 20, top: 40, bottom: 40 },
-      xAxis: { type: 'value', name: 'Distance (kb)' },
+      grid: { left: 50, right: 20, top: 40, bottom: 48 },
+      xAxis: {
+        type: 'value',
+        name: 'Distance (kb)',
+        min: 0,
+        max: 20,
+        nameLocation: 'middle',
+        nameGap: 28,
+      },
       yAxis: { type: 'value', name: 'r²', min: 0, max: 1 },
       series: Object.entries(payload).map(([name, obj]: any) => ({
         name: name.replace('Lineage_', ''),
         type: 'line',
         showSymbol: false,
         smooth: true,
-        data: (obj.points || []).map((p: any) => [p.dist_kb, p.r2]),
+        data: (obj.points || [])
+          .filter((p: any) => Number(p.dist_kb) <= 20)
+          .map((p: any) => [p.dist_kb, p.r2]),
         itemStyle: { color: obj.color },
         lineStyle: { color: obj.color, width: 2 },
       })),

@@ -27,20 +27,26 @@ export default function Sweeps() {
   const manhattan = useMemo(() => {
     const points = data?.manhattan || []
     const axis = data?.chrom_axis || []
+    const thr = data?.threshold
+    const thrText =
+      thr != null ? `Top 5% (Fst = ${Number(thr).toFixed(2)})` : 'Top 5%'
     return {
       tooltip: {
         formatter: (p: any) =>
-          `${p.data[3]}<br/>${p.data[4]}-${p.data[5]}<br/>Fst=${p.data[1]}<br/>${p.data[6] || ''}`,
+          `${p.data[7] || p.data[3]}<br/>${p.data[4]}-${p.data[5]}<br/>Fst=${p.data[1]}<br/>${p.data[6] || ''}`,
       },
-      grid: { left: 50, right: 20, top: 30, bottom: 50 },
+      grid: { left: 55, right: 20, top: 36, bottom: 52 },
       xAxis: {
         type: 'value',
+        name: 'Chromosome',
+        nameLocation: 'middle',
+        nameGap: 30,
         axisLabel: {
           formatter: (v: number) => {
             const hit = axis.find(
               (c: any) => v >= c.offset && v <= c.offset + c.length,
             )
-            return hit ? hit.chrom.replace('NC_0376', 'Chr') : ''
+            return hit?.label || ''
           },
         },
       },
@@ -49,22 +55,31 @@ export default function Sweeps() {
         {
           type: 'scatter',
           symbolSize: 5,
-          data: points.map((p: any) => [
-            p.x,
-            p.weighted_fst,
-            p.comparison,
-            p.chrom,
-            p.bin_start,
-            p.bin_end,
-            p.genes,
-          ]),
+          data: points.map((p: any) => {
+            const label =
+              axis.find((c: any) => c.chrom === p.chrom)?.label || p.chrom
+            return [
+              p.x,
+              p.weighted_fst,
+              p.comparison,
+              p.chrom,
+              p.bin_start,
+              p.bin_end,
+              p.genes,
+              label,
+            ]
+          }),
           itemStyle: { color: '#0f3d38' },
-          markLine: data?.threshold
+          markLine: thr
             ? {
                 symbol: 'none',
-                lineStyle: { type: 'dashed', color: '#d4a017' },
-                data: [{ yAxis: data.threshold, name: 'Top 5% threshold' }],
-                label: { formatter: 'Top 5%' },
+                lineStyle: { type: 'dashed', color: '#d4a017', width: 2 },
+                data: [{ yAxis: thr, name: thrText }],
+                label: {
+                  formatter: thrText,
+                  position: 'insideEndTop',
+                  color: '#8a6500',
+                },
               }
             : undefined,
         },
@@ -119,7 +134,7 @@ export default function Sweeps() {
               <option value="">All</option>
               {(chroms.data?.items || []).map((c: any) => (
                 <option key={c.chrom} value={c.chrom}>
-                  {c.chrom}
+                  {c.label || c.chrom}
                 </option>
               ))}
             </select>

@@ -8,6 +8,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
+from .chroms import NUCLEAR_CHROMS, chrom_label, is_nuclear
 from .config import ASSETS_DIR, COUNTRY_COORDS, LINEAGE_COLORS, resolve_variants_db
 
 
@@ -39,26 +40,74 @@ class DataStore:
             self.gene_by_symbol[str(g.get("symbol", "")).lower()] = g
             self.gene_by_id[str(g.get("gene_id", "")).lower()] = g
 
-        self.main_chroms = [
-            c for c in self.chrom_sizes if c.get("is_main_chrom")
-        ]
+        # Only 16 nuclear chromosomes (hide mitochondrial NC_001566.1)
+        size_map = {c["chrom"]: c for c in self.chrom_sizes}
+        self.main_chroms = []
+        for chrom in NUCLEAR_CHROMS:
+            row = size_map.get(chrom)
+            if not row:
+                continue
+            self.main_chroms.append(
+                {
+                    **row,
+                    "label": chrom_label(chrom),
+                    "chr_index": NUCLEAR_CHROMS.index(chrom) + 1,
+                }
+            )
         self._chrom_offsets = self._build_chrom_offsets()
         self._variants_db = resolve_variants_db()
         self._variants_tsv = ASSETS_DIR / "variants_summary_top.tsv"
         self._variants_fallback: list[dict] | None = None
+        self._allele_map = self._load_allele_map()
+        self._vcf_path = ASSETS_DIR / "cohort_2360_clean.vcf.gz"
 
     def _build_chrom_offsets(self) -> dict[str, dict]:
         offset = 0
         gap = 2_000_000
         mapping: dict[str, dict] = {}
         for chrom in self.main_chroms:
-            mapping[chrom["chrom"]] = {
+            name = chrom["chrom"]
+            mapping[name] = {
                 "offset": offset,
                 "length": chrom["length"],
-                "label": chrom["chrom"],
+                "label": chrom.get("label") or chrom_label(name),
             }
             offset += chrom["length"] + gap
         return mapping
+
+    def _load_allele_map(self) -> dict[tuple[str, int], tuple[str, str]]:
+        """Optional sidecar: data/variants_alleles.tsv with chrom,pos,ref,alt."""
+        path = ASSETS_DIR / "variants_alleles.tsv"
+        mapping: dict[tuple[str, int], tuple[str, str]] = {}
+        if not path.exists():
+            return mapping
+        with path.open(encoding="utf-8") as f:
+            reader = csv.DictReader(f, delimiter="\t")
+            for row in reader:
+                try:
+                    key = (row["chrom"], int(row["pos"]))
+                    mapping[key] = (row["ref"], row["alt"])
+                except Exception:
+                    continue
+        return mapping
+
+    def _lookup_alleles(self, chrom: str, pos: int) -> tuple[str | None, str | None]:
+        hit = self._allele_map.get((chrom, int(pos)))
+        if hit:
+            return hit
+        # Live VCF lookup when cohort VCF + index are present
+        if self._vcf_path.exists() and (ASSETS_DIR / "cohort_2360_clean.vcf.gz.tbi").exists():
+            try:
+                import pysam  # type: ignore
+
+                with pysam.VariantFile(str(self._vcf_path)) as vf:
+                    for rec in vf.fetch(chrom, pos - 1, pos):
+                        if int(rec.pos) == int(pos):
+                            alt = rec.alts[0] if rec.alts else None
+                            return rec.ref, alt
+            except Exception:
+                return None, None
+        return None, None
 
     def overview_stats(self) -> dict:
         return {
@@ -271,9 +320,6 @@ class DataStore:
     def popgen_summary(self) -> dict:
         return self.popgen
 
-    def ld_decay_payload(self) -> dict:
-        return self.ld_decay
-
     def tree_payload(self) -> dict:
         meta = {
             s["sample_id"]: {
@@ -337,6 +383,8 @@ class DataStore:
         points = []
         for r in rows:
             chrom = r.get("chrom")
+            if not is_nuclear(str(chrom)):
+                continue
             info = self._chrom_offsets.get(chrom)
             if not info:
                 continue
@@ -344,6 +392,7 @@ class DataStore:
             points.append(
                 {
                     "chrom": chrom,
+                    "label": info.get("label") or chrom_label(str(chrom)),
                     "bin_start": r.get("bin_start"),
                     "bin_end": r.get("bin_end"),
                     "x": x,
@@ -358,13 +407,21 @@ class DataStore:
         return [
             {
                 "chrom": c["chrom"],
+                "label": c.get("label") or chrom_label(c["chrom"]),
                 "offset": self._chrom_offsets[c["chrom"]]["offset"],
                 "length": c["length"],
                 "mid": self._chrom_offsets[c["chrom"]]["offset"] + c["length"] / 2,
             }
             for c in self.main_chroms
-            if c["chrom"] in self._chrom_offsets
+            if c["chrom"] in self._chrom_offsets and is_nuclear(c["chrom"])
         ]
+
+    def ld_decay_payload(self, max_kb: float = 20.0) -> dict:
+        clipped = {}
+        for name, obj in self.ld_decay.items():
+            pts = [p for p in (obj.get("points") or []) if float(p.get("dist_kb", 0)) <= max_kb]
+            clipped[name] = {**obj, "points": pts}
+        return clipped
 
     def get_gene(self, query: str) -> dict | None:
         q = query.lower().strip()
@@ -452,7 +509,7 @@ class DataStore:
                 (chrom, start, end, page_size, offset),
             ).fetchall()
             con.close()
-            items = [
+            raw_items = [
                 {
                     "chrom": r["chrom"],
                     "pos": r["pos"],
@@ -461,8 +518,6 @@ class DataStore:
                     "ref_freq": r["ref_freq"],
                     "alt_freq": r["alt_freq"],
                     "af": r["alt_freq"],
-                    "ref": None,
-                    "alt": None,
                 }
                 for r in rows
             ]
@@ -474,15 +529,25 @@ class DataStore:
             ]
             total = len(matched)
             offset = max(0, (page - 1) * page_size)
-            items = [
+            raw_items = matched[offset : offset + page_size]
+
+        items = []
+        for r in raw_items:
+            ref, alt = self._lookup_alleles(r["chrom"], int(r["pos"]))
+            # Fall back: parse ID formats like NC_037638.1:3536:G:A
+            if ref is None or alt is None:
+                parts = str(r.get("id") or "").replace("_", ":").split(":")
+                if len(parts) >= 4 and parts[-2].isalpha() and parts[-1].isalpha():
+                    ref = ref or parts[-2]
+                    alt = alt or parts[-1]
+            items.append(
                 {
                     **r,
-                    "af": r["alt_freq"],
-                    "ref": None,
-                    "alt": None,
+                    "af": r.get("alt_freq"),
+                    "ref": ref,
+                    "alt": alt,
                 }
-                for r in matched[offset : offset + page_size]
-            ]
+            )
 
         genes = self.genes_in_region(chrom, start, end)
         return {
@@ -495,6 +560,7 @@ class DataStore:
             "items": items,
             "genes": genes[:20],
             "source": "sqlite" if self._variants_db else "tsv_fallback",
+            "chrom_label": chrom_label(chrom),
         }
 
     def jbrowse_config_resolved(self) -> dict:

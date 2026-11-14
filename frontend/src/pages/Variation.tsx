@@ -39,9 +39,9 @@ export default function Variation() {
           <div className="field">
             <label>Chromosome</label>
             <select value={chrom} onChange={(e) => setChrom(e.target.value)}>
-              {(chroms.data?.items || [{ chrom: 'NC_037638.1' }]).map((c: any) => (
+              {(chroms.data?.items || [{ chrom: 'NC_037638.1', label: 'Chr1' }]).map((c: any) => (
                 <option key={c.chrom} value={c.chrom}>
-                  {c.chrom} ({c.length?.toLocaleString?.() ?? ''})
+                  {c.label || c.chrom} · {c.chrom} ({c.length?.toLocaleString?.() ?? ''})
                 </option>
               ))}
             </select>
@@ -103,8 +103,8 @@ export default function Variation() {
                   <tr key={v.id}>
                     <td>{v.id}</td>
                     <td>{v.pos}</td>
-                    <td>{v.ref ?? '—'}</td>
-                    <td>{v.alt ?? '—'}</td>
+                    <td>{v.ref || '—'}</td>
+                    <td>{v.alt || '—'}</td>
                     <td>{v.af ?? v.alt_freq}</td>
                     <td>{v.n_chr}</td>
                     <td>{v.ref_freq}</td>

@@ -72,7 +72,7 @@ export default function Overview() {
     <div className="stack">
       <PageHeader
         title="Overview"
-        subtitle="全球蜜蜂全基因组队列概览：样本规模、谱系组成与采样分布。"
+        subtitle="Apis mellifera · 2,360 samples · Ref: Amel_HAv3.1"
         right={<span className="badge ok">{data.pipeline_version}</span>}
       />
 
@@ -90,43 +90,45 @@ export default function Overview() {
         ))}
       </div>
 
-      <div className="panel panel-pad">
-        <h3 className="section-title">Global Sample Distribution</h3>
-        {!mapReady.ready ? (
-          <div className={mapReady.error ? 'error' : 'loading'}>
-            {mapReady.error || '加载世界地图…'}
-          </div>
-        ) : (
-          <ChartActions
-            option={mapOption}
-            height={420}
-            title="Global Sample Distribution"
-            filename="overview_sample_map"
-            exportData={data.map_points}
-          />
-        )}
-      </div>
-
-      <div className="grid-2">
-        <div className="panel panel-pad">
-          <h3 className="section-title">Lineage Diversity</h3>
-          <ChartActions
-            option={pie(data.lineage, 'lineage')}
-            height={320}
-            title="Lineage Diversity"
-            filename="overview_lineage"
-            exportData={data.lineage}
-          />
+      <div className="overview-compose">
+        <div className="panel panel-pad overview-map">
+          <h3 className="section-title">Global Sample Distribution</h3>
+          {!mapReady.ready ? (
+            <div className={mapReady.error ? 'error' : 'loading'}>
+              {mapReady.error || '加载世界地图…'}
+            </div>
+          ) : (
+            <ChartActions
+              option={mapOption}
+              height={520}
+              title="Global Sample Distribution"
+              filename="overview_sample_map"
+              exportData={data.map_points}
+            />
+          )}
         </div>
-        <div className="panel panel-pad">
-          <h3 className="section-title">Caste Distribution</h3>
-          <ChartActions
-            option={pie(data.caste, 'caste')}
-            height={320}
-            title="Caste Distribution"
-            filename="overview_caste"
-            exportData={data.caste}
-          />
+
+        <div className="overview-side">
+          <div className="panel panel-pad">
+            <h3 className="section-title">Lineage Diversity</h3>
+            <ChartActions
+              option={pie(data.lineage, 'lineage')}
+              height={230}
+              title="Lineage Diversity"
+              filename="overview_lineage"
+              exportData={data.lineage}
+            />
+          </div>
+          <div className="panel panel-pad">
+            <h3 className="section-title">Caste Distribution</h3>
+            <ChartActions
+              option={pie(data.caste, 'caste')}
+              height={230}
+              title="Caste Distribution"
+              filename="overview_caste"
+              exportData={data.caste}
+            />
+          </div>
         </div>
       </div>
     </div>

@@ -112,8 +112,8 @@ def popgen_summary():
 
 
 @app.get("/api/popgen/ld_decay")
-def popgen_ld():
-    return get_store().ld_decay_payload()
+def popgen_ld(max_kb: float = Query(20, ge=1, le=100)):
+    return get_store().ld_decay_payload(max_kb=max_kb)
 
 
 @app.get("/api/popgen/tree")
@@ -170,6 +170,7 @@ def variants_region(
 @app.get("/api/chromosomes")
 def chromosomes(main_only: bool = True):
     store = get_store()
+    # Always expose the 16 nuclear chromosomes for UI selectors
     rows = store.main_chroms if main_only else store.chrom_sizes
     return {"items": rows}
 

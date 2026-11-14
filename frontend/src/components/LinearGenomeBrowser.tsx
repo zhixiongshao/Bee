@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { api } from '../api'
 import { useAsync } from '../hooks/useAsync'
+import { chromLabel } from '../utils/chroms'
 
 export default function LinearGenomeBrowser({
   defaultChrom = 'NC_037638.1',
@@ -20,6 +21,7 @@ export default function LinearGenomeBrowser({
     start: defaultStart,
     end: defaultEnd,
   })
+  const [hover, setHover] = useState<any>(null)
 
   const { data, error, loading } = useAsync(
     () =>
@@ -34,29 +36,34 @@ export default function LinearGenomeBrowser({
   )
 
   const [width, setWidth] = useState(960)
-  const height = 280
-  const pad = 28
+  const height = 320
+  const pad = 36
   const plotLeft = pad
   const plotRight = width - pad
   const plotW = plotRight - plotLeft
   const span = Math.max(1, query.end - query.start)
 
-  // Track layout (no overlap):
-  // ruler y=36; genes 58-88; variants baseline 240, points 160-240
-  const geneY = 68
-  const geneH = 16
-  const varBaseY = 240
-  const varMaxH = 70
+  const geneY = 78
+  const geneH = 18
+  const varBaseY = 280
+  const varMaxH = 90
 
   const genes = data?.genes || []
   const variants = data?.items || []
 
   const geneRects = useMemo(
     () =>
-      genes.map((g: any) => {
+      genes.map((g: any, i: number) => {
         const x1 = plotLeft + ((Math.max(g.start, query.start) - query.start) / span) * plotW
         const x2 = plotLeft + ((Math.min(g.end, query.end) - query.start) / span) * plotW
-        return { ...g, x: x1, w: Math.max(2, x2 - x1) }
+        const lane = i % 2
+        return {
+          ...g,
+          x: x1,
+          w: Math.max(3, x2 - x1),
+          y: geneY + lane * 28,
+          label: g.symbol || g.gene_id,
+        }
       }),
     [genes, query, span, plotLeft, plotW],
   )
@@ -106,11 +113,13 @@ export default function LinearGenomeBrowser({
         <div className="field">
           <label>Chromosome</label>
           <select value={chrom} onChange={(e) => setChrom(e.target.value)}>
-            {(chroms.data?.items || [{ chrom: defaultChrom }]).map((c: any) => (
-              <option key={c.chrom} value={c.chrom}>
-                {c.chrom}
-              </option>
-            ))}
+            {(chroms.data?.items || [{ chrom: defaultChrom, label: chromLabel(defaultChrom) }]).map(
+              (c: any) => (
+                <option key={c.chrom} value={c.chrom}>
+                  {c.label || chromLabel(c.chrom)} ({c.chrom})
+                </option>
+              ),
+            )}
           </select>
         </div>
         <div className="field">
@@ -138,7 +147,8 @@ export default function LinearGenomeBrowser({
       <div className="tree-wrap" style={{ padding: 8 }} ref={wrapRef}>
         <svg width="100%" viewBox={`0 0 ${width} ${height}`}>
           <text x={pad} y={20} fill="#5b6b67" fontSize="12">
-            {query.chrom}:{query.start.toLocaleString()}-{query.end.toLocaleString()}
+            {chromLabel(query.chrom)} ({query.chrom}):{query.start.toLocaleString()}-
+            {query.end.toLocaleString()}
           </text>
           <line
             x1={plotLeft}
@@ -149,35 +159,45 @@ export default function LinearGenomeBrowser({
             strokeWidth="2"
           />
 
-          <text x={pad} y={56} fill="#0f3d38" fontSize="12" fontWeight="700">
+          <text x={pad} y={58} fill="#0f3d38" fontSize="12" fontWeight="700">
             Gene models ({geneRects.length})
           </text>
-          <rect
-            x={plotLeft}
-            y={geneY - 6}
-            width={plotW}
-            height={geneH + 12}
-            fill="rgba(31,107,95,0.04)"
-            rx={6}
-          />
           {geneRects.map((g: any) => (
-            <rect
+            <g
               key={g.gene_id}
-              x={g.x}
-              y={geneY}
-              width={g.w}
-              height={geneH}
-              rx={3}
-              fill="#1f6b5f"
-              opacity={0.9}
+              onMouseEnter={() =>
+                setHover({
+                  kind: 'gene',
+                  title: g.label,
+                  detail: `${g.chrom}:${g.start}-${g.end} (${g.strand}) · exons ${g.exon_count}`,
+                })
+              }
+              onMouseLeave={() => setHover(null)}
             >
-              <title>
-                {g.symbol} {g.start}-{g.end} ({g.strand})
-              </title>
-            </rect>
+              <rect
+                x={g.x}
+                y={g.y}
+                width={g.w}
+                height={geneH}
+                rx={3}
+                fill="#1f6b5f"
+                opacity={0.92}
+              />
+              {g.w > 36 ? (
+                <text
+                  x={g.x + 4}
+                  y={g.y + 13}
+                  fill="#fffcf6"
+                  fontSize="10"
+                  fontWeight="600"
+                >
+                  {String(g.label).slice(0, Math.max(3, Math.floor(g.w / 7)))}
+                </text>
+              ) : null}
+            </g>
           ))}
 
-          <text x={pad} y={130} fill="#0f3d38" fontSize="12" fontWeight="700">
+          <text x={pad} y={150} fill="#0f3d38" fontSize="12" fontWeight="700">
             Variants AF ({varPoints.length} shown / {data?.total ?? 0} total)
           </text>
           <line
@@ -187,13 +207,6 @@ export default function LinearGenomeBrowser({
             y2={varBaseY}
             stroke="rgba(19,33,31,0.2)"
           />
-          <line
-            x1={plotLeft}
-            x2={plotLeft}
-            y1={varBaseY - varMaxH}
-            y2={varBaseY}
-            stroke="rgba(19,33,31,0.15)"
-          />
           <text x={8} y={varBaseY - varMaxH + 4} fill="#5b6b67" fontSize="10">
             1
           </text>
@@ -201,13 +214,29 @@ export default function LinearGenomeBrowser({
             0
           </text>
           {varPoints.map((v: any) => (
-            <circle key={v.id} cx={v.x} cy={v.y} r={2.2} fill="#d4a017">
-              <title>
-                {v.id} AF={v.af}
-              </title>
-            </circle>
+            <circle
+              key={v.id}
+              cx={v.x}
+              cy={v.y}
+              r={2.4}
+              fill="#d4a017"
+              onMouseEnter={() =>
+                setHover({
+                  kind: 'variant',
+                  title: v.id,
+                  detail: `pos ${v.pos} · AF=${v.af}${v.ref && v.alt ? ` · ${v.ref}>${v.alt}` : ''}`,
+                })
+              }
+              onMouseLeave={() => setHover(null)}
+            />
           ))}
         </svg>
+        {hover ? (
+          <div className="tree-tooltip">
+            <strong>{hover.title}</strong>
+            <div className="muted">{hover.detail}</div>
+          </div>
+        ) : null}
       </div>
     </div>
   )

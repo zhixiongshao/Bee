@@ -48,8 +48,8 @@ export default function App() {
           <span />
         </button>
         <div className="mobile-brand">
-          <strong>Amel WGS Atlas</strong>
-          <span>Apis mellifera</span>
+          <strong>Apis WGS Atlas</strong>
+          <span>2,360 samples · Amel_HAv3.1</span>
         </div>
       </header>
 
@@ -62,8 +62,8 @@ export default function App() {
       <aside className="sidebar">
         <div className="brand">
           <div className="brand-mark">A</div>
-          <h1>Amel WGS Atlas</h1>
-          <p>Apis mellifera · 2,360 samples · Amel_HAv3.1</p>
+          <h1>Apis WGS Atlas</h1>
+          <p>Apis mellifera · 2,360 Samples · Ref: Amel_HAv3.1</p>
         </div>
         <nav className="nav">
           {links.map((l) => (

@@ -10,3 +10,14 @@ Render / Docker 构建时会随仓库检出该文件。
   brew install git-lfs
   git lfs install
   git lfs pull
+
+Ref/Alt 等位基因
+----------------
+若提供 cohort_2360_clean.vcf.gz (+ .tbi) 到 data/，可提取：
+
+  pip install pysam
+  python scripts/extract_alleles_from_vcf.py \
+    --vcf data/cohort_2360_clean.vcf.gz \
+    --out data/variants_alleles.tsv
+
+网站会自动读取 variants_alleles.tsv 或直接查询 VCF。

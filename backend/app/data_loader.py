@@ -460,16 +460,19 @@ class DataStore:
         if self._variants_tsv.exists():
             with self._variants_tsv.open(encoding="utf-8") as f:
                 for r in csv.DictReader(f, delimiter="\t"):
-                    rows.append(
-                        {
-                            "chrom": r["chrom"],
-                            "pos": int(r["pos"]),
-                            "id": r["id"],
-                            "n_chr": int(float(r["n_chr"])),
-                            "ref_freq": float(r["ref_freq"]),
-                            "alt_freq": float(r["alt_freq"]),
-                        }
-                    )
+                    item = {
+                        "chrom": r["chrom"],
+                        "pos": int(r["pos"]),
+                        "id": r["id"],
+                        "n_chr": int(float(r["n_chr"])),
+                        "ref_freq": float(r["ref_freq"]),
+                        "alt_freq": float(r["alt_freq"]),
+                    }
+                    if r.get("ref"):
+                        item["ref"] = r["ref"]
+                    if r.get("alt"):
+                        item["alt"] = r["alt"]
+                    rows.append(item)
         self._variants_fallback = rows
         return rows
 
@@ -498,9 +501,13 @@ class DataStore:
                 (chrom, start, end),
             ).fetchone()[0]
             offset = max(0, (page - 1) * page_size)
+            cols = {c[1] for c in cur.execute("PRAGMA table_info(variants)")}
+            select_cols = "chrom, pos, id, n_chr, ref_freq, alt_freq"
+            if "ref" in cols and "alt" in cols:
+                select_cols += ", ref, alt"
             rows = cur.execute(
-                """
-                SELECT chrom, pos, id, n_chr, ref_freq, alt_freq
+                f"""
+                SELECT {select_cols}
                 FROM variants
                 WHERE chrom=? AND pos BETWEEN ? AND ?
                 ORDER BY pos
@@ -509,8 +516,9 @@ class DataStore:
                 (chrom, start, end, page_size, offset),
             ).fetchall()
             con.close()
-            raw_items = [
-                {
+            raw_items = []
+            for r in rows:
+                item = {
                     "chrom": r["chrom"],
                     "pos": r["pos"],
                     "id": r["id"],
@@ -519,8 +527,11 @@ class DataStore:
                     "alt_freq": r["alt_freq"],
                     "af": r["alt_freq"],
                 }
-                for r in rows
-            ]
+                if "ref" in r.keys() and r["ref"]:
+                    item["ref"] = r["ref"]
+                if "alt" in r.keys() and r["alt"]:
+                    item["alt"] = r["alt"]
+                raw_items.append(item)
         else:
             matched = [
                 r
@@ -533,9 +544,14 @@ class DataStore:
 
         items = []
         for r in raw_items:
-            ref, alt = self._lookup_alleles(r["chrom"], int(r["pos"]))
+            ref = r.get("ref")
+            alt = r.get("alt")
+            if not ref or not alt:
+                looked_ref, looked_alt = self._lookup_alleles(r["chrom"], int(r["pos"]))
+                ref = ref or looked_ref
+                alt = alt or looked_alt
             # Fall back: parse ID formats like NC_037638.1:3536:G:A
-            if ref is None or alt is None:
+            if not ref or not alt:
                 parts = str(r.get("id") or "").replace("_", ":").split(":")
                 if len(parts) >= 4 and parts[-2].isalpha() and parts[-1].isalpha():
                     ref = ref or parts[-2]

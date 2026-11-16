@@ -81,16 +81,10 @@ select {
 }
 
 .brand-mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  background: linear-gradient(145deg, var(--amber-2), var(--amber));
-  color: var(--teal);
-  font-family: var(--font-display);
-  font-weight: 700;
+  display: block;
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
   margin-bottom: 14px;
 }
 
@@ -690,6 +684,20 @@ table.data tr:hover td {
   }
 
   .mobile-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .mobile-brand-mark {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
+  .mobile-brand > div {
     display: flex;
     flex-direction: column;
     gap: 2px;

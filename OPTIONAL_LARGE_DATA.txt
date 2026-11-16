@@ -1,11 +1,10 @@
-完整变异库已纳入仓库（Git LFS）
-================================
+完整变异库（Git LFS）
+====================
 
 路径：
   data/variants_index.db  (~543MB, Git LFS)
 
-Render / Docker 构建时会随仓库检出该文件。
-本地克隆请先安装 Git LFS：
+Render / Docker 构建时会随仓库检出。本地克隆请先：
 
   brew install git-lfs
   git lfs install
@@ -13,11 +12,8 @@ Render / Docker 构建时会随仓库检出该文件。
 
 Ref/Alt 等位基因
 ----------------
-若提供 cohort_2360_clean.vcf.gz (+ .tbi) 到 data/，可提取：
+data/variants_summary_top.tsv 与 data/variants_alleles.tsv
+已包含 top 位点的 Ref/Alt 碱基；variants_index.db 中对应行亦已写入。
 
-  pip install pysam
-  python scripts/extract_alleles_from_vcf.py \
-    --vcf data/cohort_2360_clean.vcf.gz \
-    --out data/variants_alleles.tsv
-
-网站会自动读取 variants_alleles.tsv 或直接查询 VCF。
+完整 cohort VCF（可选，Genome Browser 变异轨）：
+  将 cohort_2360_clean.vcf.gz (+ .tbi) 放到 data/ 即可挂载。

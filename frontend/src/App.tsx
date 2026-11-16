@@ -48,8 +48,11 @@ export default function App() {
           <span />
         </button>
         <div className="mobile-brand">
-          <strong>Apis WGS Atlas</strong>
-          <span>2,360 samples · Amel_HAv3.1</span>
+          <img className="mobile-brand-mark" src="/bee-logo.png" alt="" />
+          <div>
+            <strong>Apis WGS Atlas</strong>
+            <span>2,360 samples · Amel_HAv3.1</span>
+          </div>
         </div>
       </header>
 
@@ -61,7 +64,7 @@ export default function App() {
 
       <aside className="sidebar">
         <div className="brand">
-          <div className="brand-mark">A</div>
+          <img className="brand-mark" src="/bee-logo.png" alt="Apis mellifera" />
           <h1>Apis WGS Atlas</h1>
           <p>Apis mellifera · 2,360 Samples · Ref: Amel_HAv3.1</p>
         </div>

@@ -33,6 +33,7 @@ class DataStore:
         self.manifest: list[dict] = _load_json("dataset_manifest.json")
         self.jbrowse_config: dict = _load_json("jbrowse2_config.json")
         self.tree_newick: str = _load_text("cohort_2360_nj.tree").strip()
+        self._apply_hymenopteramine_annotations()
 
         self.gene_by_symbol: dict[str, dict] = {}
         self.gene_by_id: dict[str, dict] = {}
@@ -60,6 +61,30 @@ class DataStore:
         self._variants_fallback: list[dict] | None = None
         self._allele_map = self._load_allele_map()
         self._vcf_path = ASSETS_DIR / "cohort_2360_clean.vcf.gz"
+
+    def _apply_hymenopteramine_annotations(self) -> None:
+        """Overlay KEGG/GO from hymenopteramine_annotations.tsv onto gene cards."""
+        path = ASSETS_DIR / "hymenopteramine_annotations.tsv"
+        if not path.exists():
+            return
+        by_id: dict[str, dict[str, dict[str, bool]]] = {}
+        with path.open(encoding="utf-8") as f:
+            for line in f:
+                parts = line.rstrip("\n").split("\t")
+                if len(parts) < 7:
+                    continue
+                _symbol, gid, go_name, go_id, _ns, kegg_id, kegg_name = parts[:7]
+                bucket = by_id.setdefault(gid, {"go": {}, "kegg": {}})
+                if go_id:
+                    bucket["go"][f"{go_id}:{go_name}"] = True
+                if kegg_id:
+                    bucket["kegg"][f"{kegg_id}:{kegg_name}"] = True
+        for g in self.gene_cards:
+            hit = by_id.get(str(g.get("gene_id") or ""))
+            if not hit:
+                continue
+            g["kegg_pathways"] = " | ".join(hit["kegg"].keys())
+            g["go_terms"] = " | ".join(hit["go"].keys())
 
     def _build_chrom_offsets(self) -> dict[str, dict]:
         offset = 0
@@ -291,29 +316,56 @@ class DataStore:
             raise KeyError(f"admixture K={k} not found")
         samples = self.admixture["samples"]
         meta = {s["sample_id"]: s for s in self.samples}
+        lineage_order = ["A", "C", "M", "O", "Y", "Unassigned"]
+        order_idx = {name: i for i, name in enumerate(lineage_order)}
         rows = []
         for i, sid in enumerate(samples):
             m = meta.get(sid, {})
+            lin = m.get("lineage") or "Unassigned"
+            if lin not in order_idx:
+                lin = "Unassigned"
+            props = matrix[i] or []
             rows.append(
                 {
                     "sample_id": sid,
-                    "lineage": m.get("lineage") or "Unassigned",
+                    "lineage": lin,
                     "type": m.get("type"),
                     "country": m.get("country"),
-                    "proportions": matrix[i],
+                    "proportions": props,
                 }
             )
-        # sort by dominant component then lineage for cleaner bars
+        # Lineage order, then dominant ancestry fraction high→low (staircase)
         rows.sort(
             key=lambda r: (
-                r["lineage"],
+                order_idx.get(r["lineage"], 99),
                 -max(r["proportions"]) if r["proportions"] else 0,
+                r["sample_id"],
             )
         )
+        groups = []
+        i = 0
+        n = len(rows)
+        while i < n:
+            lin = rows[i]["lineage"]
+            j = i + 1
+            while j < n and rows[j]["lineage"] == lin:
+                j += 1
+            groups.append(
+                {
+                    "lineage": lin,
+                    "start": i,
+                    "end": j - 1,
+                    "mid": (i + j - 1) / 2,
+                    "count": j - i,
+                }
+            )
+            i = j
         return {
             "k": k,
             "available_k": list(range(2, 13)),
             "total_samples": self.admixture["total_samples"],
+            "lineage_order": lineage_order,
+            "groups": groups,
             "items": rows,
         }
 
@@ -574,7 +626,7 @@ class DataStore:
             "start": start,
             "end": end,
             "items": items,
-            "genes": genes[:20],
+            "genes": genes,
             "source": "sqlite" if self._variants_db else "tsv_fallback",
             "chrom_label": chrom_label(chrom),
         }

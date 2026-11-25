@@ -26,7 +26,7 @@ export const api = {
   pca: () => get<any>('/api/samples/pca_scatter'),
   admixture: (k: number) => get<any>(`/api/popgen/admixture${qs({ k })}`),
   popgenSummary: () => get<any>('/api/popgen/summary'),
-  ldDecay: () => get<any>('/api/popgen/ld_decay'),
+  ldDecay: (maxKb = 5) => get<any>(`/api/popgen/ld_decay${qs({ max_kb: maxKb })}`),
   tree: () => get<any>('/api/popgen/tree'),
   sweeps: (params: Record<string, any>) =>
     get<any>(`/api/sweeps${qs(params)}`),

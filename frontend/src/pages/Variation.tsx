@@ -159,23 +159,27 @@ export default function Variation() {
                     {String(g.kegg_pathways || '')
                       .split('|')
                       .filter(Boolean)
-                      .slice(0, 4)
                       .map((p: string) => (
                         <span className="chip" key={p}>
                           {p}
                         </span>
                       ))}
+                    {!String(g.kegg_pathways || '').trim() && (
+                      <span className="muted">No KEGG pathway annotated</span>
+                    )}
                   </div>
                   <div className="chips" style={{ marginTop: 6 }}>
                     {String(g.go_terms || '')
                       .split('|')
                       .filter(Boolean)
-                      .slice(0, 6)
                       .map((p: string) => (
                         <span className="chip" key={p}>
                           {p}
                         </span>
                       ))}
+                    {!String(g.go_terms || '').trim() && (
+                      <span className="muted">No GO terms annotated</span>
+                    )}
                   </div>
                 </div>
               ))}

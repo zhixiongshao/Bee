@@ -19,42 +19,72 @@ export default function PopGen() {
 
   const admixOption = useMemo(() => {
     const items = admix.data?.items || []
-    const step = Math.max(1, Math.floor(items.length / 800))
-    const shown = items.filter((_: any, i: number) => i % step === 0)
+    const groups = admix.data?.groups || []
     const kVal = admix.data?.k || k
     const series = Array.from({ length: kVal }, (_, i) => ({
       name: `Comp ${i + 1}`,
       type: 'bar',
       stack: 'admix',
       barWidth: '100%',
-      data: shown.map((r: any) => r.proportions[i]),
+      barGap: '-100%',
+      data: items.map((r: any) => r.proportions[i]),
       emphasis: { focus: 'series' },
+      markLine:
+        i === 0
+          ? {
+              symbol: 'none',
+              silent: true,
+              label: { show: false },
+              lineStyle: { color: '#ffffff', width: 2.5, type: 'solid' },
+              data: groups.slice(1).map((g: any) => ({
+                xAxis: items[g.start]?.sample_id,
+              })),
+            }
+          : undefined,
     }))
+    const groupLabelData = items.map((_: any, idx: number) => {
+      const g = groups.find((x: any) => Math.round(x.mid) === idx)
+      return g ? g.lineage : ''
+    })
     return {
       tooltip: {
         trigger: 'axis',
+        confine: true,
         axisPointer: { type: 'shadow' },
         formatter: (params: any[]) => {
           const idx = params[0]?.dataIndex
-          const row = shown[idx]
+          const row = items[idx]
           if (!row) return ''
           return (
-            `${row.sample_id}<br/>${row.lineage} · ${row.country}<br/>` +
+            `${row.sample_id}<br/>${row.lineage} · ${row.country || '—'}<br/>` +
             params
               .map((p) => `${p.marker}${p.seriesName}: ${Number(p.value).toFixed(3)}`)
               .join('<br/>')
           )
         },
       },
-      legend: { top: 0 },
-      grid: { left: 20, right: 20, top: 40, bottom: 40 },
+      legend: { top: 4 },
+      grid: { left: 40, right: 16, top: 56, bottom: 48 },
       xAxis: {
         type: 'category',
-        data: shown.map((r: any) => r.sample_id),
-        axisLabel: { show: false },
+        data: items.map((r: any) => r.sample_id),
         axisTick: { show: false },
+        axisLabel: {
+          interval: 0,
+          hideOverlap: true,
+          color: '#13211f',
+          fontWeight: 600,
+          formatter: (_: string, idx: number) => groupLabelData[idx] || '',
+        },
       },
-      yAxis: { type: 'value', max: 1, min: 0 },
+      yAxis: {
+        type: 'value',
+        max: 1,
+        min: 0,
+        name: `Ancestry (K=${kVal})`,
+        nameLocation: 'middle',
+        nameGap: 28,
+      },
       series,
       color: [
         '#0f3d38',
@@ -254,14 +284,14 @@ export default function PopGen() {
   const ldOption = useMemo(() => {
     const payload = ld.data || {}
     return {
-      tooltip: { trigger: 'axis' },
+      tooltip: { trigger: 'axis', confine: true },
       legend: { top: 0 },
       grid: { left: 50, right: 20, top: 40, bottom: 48 },
       xAxis: {
         type: 'value',
         name: 'Distance (kb)',
         min: 0,
-        max: 20,
+        max: 5,
         nameLocation: 'middle',
         nameGap: 28,
       },
@@ -272,7 +302,7 @@ export default function PopGen() {
         showSymbol: false,
         smooth: true,
         data: (obj.points || [])
-          .filter((p: any) => Number(p.dist_kb) <= 20)
+          .filter((p: any) => Number(p.dist_kb) <= 5)
           .map((p: any) => [p.dist_kb, p.r2]),
         itemStyle: { color: obj.color },
         lineStyle: { color: obj.color, width: 2 },
@@ -311,14 +341,16 @@ export default function PopGen() {
           <h3 className="section-title" style={{ marginBottom: 0 }}>
             Admixture (K={k})
           </h3>
-          <div className="field" style={{ minWidth: 220 }}>
-            <label>K = {k}</label>
+          <div className="field" style={{ minWidth: 260 }}>
+            <label>K = {k}（拖动切换 2–12）</label>
             <input
               type="range"
               min={2}
               max={12}
+              step={1}
               value={k}
               onChange={(e) => setK(Number(e.target.value))}
+              style={{ width: '100%' }}
             />
           </div>
         </div>

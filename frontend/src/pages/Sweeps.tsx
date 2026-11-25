@@ -30,25 +30,55 @@ export default function Sweeps() {
     const thr = data?.threshold
     const thrText =
       thr != null ? `Top 5% (Fst = ${Number(thr).toFixed(2)})` : 'Top 5%'
+    const chromIdx = Object.fromEntries(
+      axis.map((c: any, i: number) => [c.chrom, i]),
+    )
+    const oddColor = '#0f3d38'
+    const evenColor = '#c9a227'
+    const xMax =
+      axis.length > 0
+        ? axis[axis.length - 1].offset + axis[axis.length - 1].length
+        : undefined
     return {
       tooltip: {
-        formatter: (p: any) =>
-          `${p.data[7] || p.data[3]}<br/>${p.data[4]}-${p.data[5]}<br/>Fst=${p.data[1]}<br/>${p.data[6] || ''}`,
+        confine: true,
+        appendToBody: true,
+        extraCssText:
+          'max-width:320px;white-space:normal;word-break:break-word;line-height:1.35;',
+        formatter: (p: any) => {
+          const genes = String(p.data[6] || '')
+            .split(';')
+            .filter(Boolean)
+          const geneText =
+            genes.length > 8
+              ? `${genes.slice(0, 8).join('; ')} … (+${genes.length - 8})`
+              : genes.join('; ')
+          return `${p.data[7] || p.data[3]}<br/>${p.data[4]}-${p.data[5]}<br/>Fst=${p.data[1]}${
+            geneText ? `<br/>${geneText}` : ''
+          }`
+        },
       },
-      grid: { left: 55, right: 20, top: 36, bottom: 52 },
+      grid: { left: 55, right: 20, top: 36, bottom: 56 },
       xAxis: {
         type: 'value',
         name: 'Chromosome',
         nameLocation: 'middle',
-        nameGap: 30,
+        nameGap: 32,
+        min: 0,
+        max: xMax,
+        axisTick: {
+          customValues: axis.map((c: any) => c.mid),
+        },
         axisLabel: {
+          customValues: axis.map((c: any) => c.mid),
+          hideOverlap: false,
+          interval: 0,
           formatter: (v: number) => {
-            const hit = axis.find(
-              (c: any) => v >= c.offset && v <= c.offset + c.length,
-            )
+            const hit = axis.find((c: any) => Math.abs(c.mid - v) < 1)
             return hit?.label || ''
           },
         },
+        splitLine: { show: false },
       },
       yAxis: { type: 'value', name: 'weighted Fst' },
       series: [
@@ -69,28 +99,63 @@ export default function Sweeps() {
               label,
             ]
           }),
-          itemStyle: { color: '#0f3d38' },
-          markLine: thr
-            ? {
-                symbol: 'none',
-                lineStyle: { type: 'dashed', color: '#d4a017', width: 2 },
-                data: [{ yAxis: thr, name: thrText }],
-                label: {
-                  formatter: thrText,
-                  position: 'insideEndTop',
-                  color: '#8a6500',
+          itemStyle: {
+            color: (params: any) => {
+              const idx = chromIdx[params.data[3]] ?? 0
+              return idx % 2 === 0 ? oddColor : evenColor
+            },
+          },
+          markLine: {
+            symbol: 'none',
+            silent: true,
+            data: [
+              ...(thr != null
+                ? [
+                    {
+                      yAxis: thr,
+                      name: thrText,
+                      lineStyle: { type: 'dashed', color: '#d4a017', width: 2 },
+                      label: {
+                        formatter: thrText,
+                        position: 'insideEndTop',
+                        color: '#8a6500',
+                      },
+                    },
+                  ]
+                : []),
+              ...axis.slice(1).map((c: any) => ({
+                xAxis: c.offset,
+                lineStyle: {
+                  type: 'solid',
+                  color: 'rgba(19,33,31,0.12)',
+                  width: 1,
                 },
-              }
-            : undefined,
+                label: { show: false },
+              })),
+            ],
+          },
         },
       ],
     }
   }, [data])
 
-  async function openGene(symbol: string) {
+  async function openGene(symbol: string, row?: any) {
     try {
       const g = await api.gene(symbol)
-      setSelectedGene(g)
+      const hasKegg = Boolean(String(g?.kegg_pathways || '').trim())
+      const hasGo = Boolean(String(g?.go_terms || '').trim())
+      // Gene-level annot missing: fall back to window-aggregated pathways
+      setSelectedGene({
+        ...g,
+        kegg_pathways: hasKegg ? g.kegg_pathways : row?.kegg_pathways || '',
+        go_terms: hasGo ? g.go_terms : row?.go_terms || '',
+        annot_source:
+          hasKegg || hasGo
+            ? 'gene'
+            : row?.kegg_pathways || row?.go_terms
+              ? 'window'
+              : 'none',
+      })
     } catch {
       setSelectedGene({ symbol, error: '未找到基因卡片' })
     }
@@ -205,7 +270,7 @@ export default function Sweeps() {
                               key={g}
                               className="chip"
                               style={{ cursor: 'pointer', border: 0 }}
-                              onClick={() => openGene(g)}
+                              onClick={() => openGene(g, r)}
                             >
                               {g}
                             </button>
@@ -217,12 +282,14 @@ export default function Sweeps() {
                         {String(r.kegg_pathways || '')
                           .split('|')
                           .filter(Boolean)
-                          .slice(0, 2)
                           .map((p: string) => (
                             <span className="chip" key={p}>
                               {p.split(':').slice(1).join(':') || p}
                             </span>
                           ))}
+                        {!String(r.kegg_pathways || '').trim() && (
+                          <span className="muted">No KEGG pathway annotated</span>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -263,6 +330,9 @@ export default function Sweeps() {
                 {selectedGene.chrom}:{selectedGene.start}-{selectedGene.end} (
                 {selectedGene.strand}) · exons {selectedGene.exon_count}
               </div>
+              {selectedGene.annot_source === 'window' && (
+                <div className="muted">该基因暂无独立注释，以下为窗口候选基因汇总</div>
+              )}
               <div>
                 <div className="section-title">KEGG</div>
                 <div className="chips">
@@ -274,6 +344,9 @@ export default function Sweeps() {
                         {p}
                       </span>
                     ))}
+                  {!String(selectedGene.kegg_pathways || '').trim() && (
+                    <span className="muted">No KEGG pathway annotated</span>
+                  )}
                 </div>
               </div>
               <div>
@@ -282,12 +355,14 @@ export default function Sweeps() {
                   {String(selectedGene.go_terms || '')
                     .split('|')
                     .filter(Boolean)
-                    .slice(0, 12)
                     .map((p: string) => (
                       <span className="chip" key={p}>
                         {p}
                       </span>
                     ))}
+                  {!String(selectedGene.go_terms || '').trim() && (
+                    <span className="muted">No GO terms annotated</span>
+                  )}
                 </div>
               </div>
             </div>

@@ -112,7 +112,7 @@ def popgen_summary():
 
 
 @app.get("/api/popgen/ld_decay")
-def popgen_ld(max_kb: float = Query(20, ge=1, le=100)):
+def popgen_ld(max_kb: float = Query(5, ge=1, le=100)):
     return get_store().ld_decay_payload(max_kb=max_kb)
 
 
@@ -160,7 +160,7 @@ def variants_region(
     start: int = Query(..., ge=1),
     end: int = Query(..., ge=1),
     page: int = Query(1, ge=1),
-    page_size: int = Query(100, ge=1, le=1000),
+    page_size: int = Query(100, ge=1, le=200000),
 ):
     return get_store().query_variants(
         chrom=chrom, start=start, end=end, page=page, page_size=page_size

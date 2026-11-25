@@ -326,16 +326,19 @@ table.data tr:hover td {
 
 .chip {
   display: inline-flex;
-  align-items: center;
-  padding: 3px 8px;
-  border-radius: 999px;
+  align-items: flex-start;
+  padding: 4px 10px;
+  border-radius: 10px;
   background: rgba(15, 61, 56, 0.08);
   color: var(--teal);
   font-size: 0.72rem;
-  max-width: 220px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.35;
+  max-width: min(100%, 420px);
+  white-space: normal;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  text-overflow: unset;
 }
 
 .muted {
@@ -495,7 +498,11 @@ table.data tr:hover td {
   border-radius: 10px;
   padding: 10px 12px;
   min-width: 160px;
+  max-width: min(360px, calc(100% - 24px));
   box-shadow: var(--shadow);
+  z-index: 5;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .jbrowse-wrap {
